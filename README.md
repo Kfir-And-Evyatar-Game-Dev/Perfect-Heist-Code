@@ -1,24 +1,37 @@
 <div dir="rtl">
 
-# השוד המושלם: רמת המדריך | PERFECT HEIST – Tutorial Level
+# השוד המושלם: אב טיפוס | PERFECT HEIST – Prototype
 
-**מטלה 3, חלק ב** בקורס פיתוח משחקי מחשב.
+**מטלה 4** בקורס פיתוח משחקי מחשב: מימוש תהליך הליבה, פיסיקה וארכיטקטורה. ממשיך את רמת המדריך ממטלה 3.
 **חברי הצוות:** כפיר נזרי, אביתר אהרון.
 
 > **השוד מתחיל בתוכנית טובה, לא במרוץ נגד השעון.**
 
 | | |
 |---|---|
-| **לשחק בדפדפן, ולהוריד APK לאנדרואיד** | **[kfir-and-evyatar.itch.io/perfect-heist-guide-level](https://kfir-and-evyatar.itch.io/perfect-heist-guide-level)** (גם בטלפון, לרוחב) |
-| **סרטון מהטלפון (Android)** | **[youtu.be/fIYPyt7VN1s](https://youtu.be/fIYPyt7VN1s)** |
+| **לשחק בדפדפן** | **[kfir-and-evyatar.itch.io/perfect-heist-prototype](https://kfir-and-evyatar.itch.io/perfect-heist-prototype)** (גם בטלפון, לרוחב) |
+| **הרצה, תרשים מחלקות והחלטות ארכיטקטורה** | [מטלה 4: הרצה וארכיטקטורה](#מטלה-4--הרצה-וארכיטקטורה) (בהמשך הקובץ) |
 | **תכנון הרמות של המשחק הזה** | [Level_Design.md: השוד המושלם](https://github.com/Kfir-And-Evyatar-Game-Dev/---Perfect-Heist/blob/main/Level_Design.md), עם מפות ותרשימים |
+| **הגרסה של מטלה 3 (רמת המדריך)** | [itch.io](https://kfir-and-evyatar.itch.io/perfect-heist-guide-level), [סרטון מהטלפון](https://youtu.be/fIYPyt7VN1s) |
 
-### הריפוזיטוריז של חלק א (תכנון רמות לכל N+1 המשחקים)
-| משחק | ריפו |
+### מטלה 4: הפיסיקה בשלושת המשחקים
+
+כל אחת מהתכונות שנלמדו מופיעה לפחות באחד מהמשחקים. **CharacterController** ממומש כאן, כי ל-`CharacterController` אין גרסה דו־ממדית ושלושת המשחקים שלנו דו־ממדיים.
+
+| תכונה | איפה |
 |---|---|
-| השוד המושלם (המשחק שמומש כאן) | [---Perfect-Heist](https://github.com/Kfir-And-Evyatar-Game-Dev/---Perfect-Heist) |
-| כיבוש המפה | [---Map-Conquest](https://github.com/Kfir-And-Evyatar-Game-Dev/---Map-Conquest) |
-| רעש שמציל | [---sound-of-survival](https://github.com/Kfir-And-Evyatar-Game-Dev/---sound-of-survival) |
+| **CharacterController** | **השוד המושלם:** המתגנב זז ב-`CharacterController.Move` מול `BoxCollider` תלת־ממדי על הקירות. אם הוא נתקע בקיר, התוכנית נכשלת ([`Character.cs`](Assets/Scripts/Actors/Character.cs), [`MapBuilder.cs`](Assets/Scripts/World/MapBuilder.cs)) |
+| **Rigidbody2D** | השוד המושלם (דמויות Kinematic שזזות ב-`MovePosition` כדי שהטריגרים יזהו מגע), [כיבוש המפה](https://github.com/Kfir-And-Evyatar-Game-Dev/Map-Conquest-Prototype), [רעש שמציל](https://github.com/Kfir-And-Evyatar-Game-Dev/Sound-of-Survival-prototype) |
+| **AddForce** | [כיבוש המפה](https://github.com/Kfir-And-Evyatar-Game-Dev/Map-Conquest-Prototype): שיגור פגזים והדיפה |
+| **Raycast** | [כיבוש המפה](https://github.com/Kfir-And-Evyatar-Game-Dev/Map-Conquest-Prototype): בחירת יחידה ואזור בעכבר |
+| **Collision2D** | [כיבוש המפה](https://github.com/Kfir-And-Evyatar-Game-Dev/Map-Conquest-Prototype), [רעש שמציל](https://github.com/Kfir-And-Evyatar-Game-Dev/Sound-of-Survival-prototype) |
+
+### הריפוזיטוריז של המשחקים
+| משחק | אב טיפוס (מטלה 4) | תכנון (מטלות 1–3) |
+|---|---|---|
+| השוד המושלם | הריפו הזה | [---Perfect-Heist](https://github.com/Kfir-And-Evyatar-Game-Dev/---Perfect-Heist) |
+| כיבוש המפה | [Map-Conquest-Prototype](https://github.com/Kfir-And-Evyatar-Game-Dev/Map-Conquest-Prototype) | [---Map-Conquest](https://github.com/Kfir-And-Evyatar-Game-Dev/---Map-Conquest) |
+| רעש שמציל | [Sound-of-Survival-prototype](https://github.com/Kfir-And-Evyatar-Game-Dev/Sound-of-Survival-prototype) | [---sound-of-survival](https://github.com/Kfir-And-Evyatar-Game-Dev/---sound-of-survival) |
 
 ---
 
@@ -46,7 +59,7 @@
 
 ---
 
-## ארבעת הנושאים של המטלה, ואיפה הם בקוד
+## מטלה 3: ארבעת הנושאים, ואיפה הם בקוד
 
 ### 1. דגמים (Prefabs) ויצירה אוטומטית (Spawn), כולל דגמים מבינה מלאכותית
 - **5 Prefabs** בתיקייה `Assets/Prefabs`: ‏Character, ‏Guard, ‏SecurityCamera, ‏Diamond ו־Exit (רכב המילוט).
