@@ -39,7 +39,12 @@ public class TutorialDirector : MonoBehaviour
         ui.ClosePanel();
         ui.PlanChanged();
 
-        GuideRunner.Run(BuildSteps());
+        // When the guide ends or is skipped, the player plans freely.
+        GuideRunner.Run(BuildSteps(), () =>
+        {
+            ui.AllowRun = true;
+            ui.PlanChanged();
+        });
     }
 
     List<GuideStep> BuildSteps()

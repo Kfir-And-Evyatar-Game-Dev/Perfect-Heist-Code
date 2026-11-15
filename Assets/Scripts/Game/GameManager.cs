@@ -51,6 +51,9 @@ public class GameManager : MonoBehaviour
     public int Attempts { get; private set; }
     public float LastRunTime { get; private set; }
 
+    /// <summary>Set by the "Skip tutorial" button: no more guide steps for the rest of this session.</summary>
+    public bool GuidesSkipped { get; set; }
+
     /// <summary>Saved on the device, so it survives closing the game.</summary>
     public bool TutorialCompleted
     {

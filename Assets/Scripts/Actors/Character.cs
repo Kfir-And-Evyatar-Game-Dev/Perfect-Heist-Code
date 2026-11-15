@@ -79,7 +79,11 @@ public class Character : MonoBehaviour
         Role = data.role;
         if (Role == CharacterRole.Sneak)
         {
-            controller = gameObject.AddComponent<CharacterController>();
+            // A CharacterController is a 3D collider, and Unity won't put 3D and 2D colliders on the
+            // same object (this one has a CircleCollider2D for the triggers), so it lives on a child.
+            var body3D = new GameObject("CharacterController3D");
+            body3D.transform.SetParent(transform, false);
+            controller = body3D.AddComponent<CharacterController>();
             controller.radius = controllerRadius;
             controller.height = 2f * controllerRadius;
             controller.skinWidth = controllerSkinWidth;
@@ -140,7 +144,13 @@ public class Character : MonoBehaviour
         if (controller != null && boardStart < 0f)
         {
             controller.enabled = true;
-            CollisionFlags hits = controller.Move(target - transform.position);
+            Physics.SyncTransforms(); // the child follows this object; let the controller see where it is now
+            CollisionFlags hits = controller.Move(target - controller.transform.position);
+
+            // Bring this object (sprite, 2D trigger collider) to where the controller ended up.
+            Vector3 moved = controller.transform.position;
+            controller.transform.localPosition = Vector3.zero;
+            transform.position = moved;
             DocPos = map.WorldToDocPosition(transform.position);
             if ((hits & CollisionFlags.Sides) != 0 &&
                 (target - transform.position).sqrMagnitude > wallBlockTolerance * wallBlockTolerance)

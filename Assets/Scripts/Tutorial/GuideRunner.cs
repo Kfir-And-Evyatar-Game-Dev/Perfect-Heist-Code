@@ -36,12 +36,29 @@ public class GuideRunner : MonoBehaviour
 
     public static GuideRunner Run(List<GuideStep> steps, Action onFinished = null)
     {
+        if (GameManager.Ensure().GuidesSkipped)
+        {
+            onFinished?.Invoke();
+            return null;
+        }
+
         var runner = new GameObject("Guide").AddComponent<GuideRunner>();
         runner.overlay = GuideOverlay.Create();
+        runner.overlay.SetSkipAction(runner.Skip);
         runner.steps = steps;
         runner.onFinished = onFinished;
         runner.Next();
         return runner;
+    }
+
+    /// <summary>The "Skip tutorial" button: ends this guide and every later one in this session.</summary>
+    public void Skip()
+    {
+        GameManager.Ensure().GuidesSkipped = true;
+        index = steps.Count;
+        overlay.Hide();
+        onFinished?.Invoke();
+        Destroy(gameObject);
     }
 
     void Next()

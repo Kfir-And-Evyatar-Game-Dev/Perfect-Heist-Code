@@ -20,6 +20,7 @@ public class GuideOverlay : MonoBehaviour
     Text bubbleText, hintText;
     Button bubbleButton;
     Action onBubbleButton;
+    Action onSkip;
     Func<Rect> holeSource;
     float hintUntil;
 
@@ -72,7 +73,13 @@ public class GuideOverlay : MonoBehaviour
 
         bubbleButton = UIKit.NewButton(bubble, "Got it", () => onBubbleButton?.Invoke(), UIKit.Green);
         UIKit.Place((RectTransform)bubbleButton.transform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-24, 20), new Vector2(240, 80));
+
+        // Drawn above the dimmed screen, so it can always be tapped.
+        Button skipButton = UIKit.NewButton(root, "Skip tutorial", () => onSkip?.Invoke(), UIKit.ButtonColor, 28);
+        UIKit.Place((RectTransform)skipButton.transform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(24, 24), new Vector2(260, 64));
     }
+
+    public void SetSkipAction(Action skip) => onSkip = skip;
 
     static void Pivot0(RectTransform rt)
     {
