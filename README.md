@@ -10,6 +10,8 @@
 | | |
 |---|---|
 | **לשחק בדפדפן** | **[kfir-and-evyatar.itch.io/perfect-heist-prototype](https://kfir-and-evyatar.itch.io/perfect-heist-prototype)** (גם בטלפון, לרוחב) |
+| **רכיבים דרמטיים (מטלה 5)** | [dramatic-elements.md](dramatic-elements.md) |
+| **לשחק בעלילה (Twine)** | **[גרסת הדפדפן של הסיפור](https://kfir-and-evyatar-game-dev.github.io/Perfect-Heist-prototype/twine/perfect-heist-story.html)**, [קובץ המקור](twine/perfect-heist-story.twee) |
 | **הרצה, תרשים מחלקות והחלטות ארכיטקטורה** | [מטלה 4: הרצה וארכיטקטורה](#מטלה-4--הרצה-וארכיטקטורה) (בהמשך הקובץ) |
 | **תכנון הרמות של המשחק הזה** | [Level_Design.md: השוד המושלם](https://github.com/Kfir-And-Evyatar-Game-Dev/---Perfect-Heist/blob/main/Level_Design.md), עם מפות ותרשימים |
 | **הגרסה של מטלה 3 (רמת המדריך)** | [itch.io](https://kfir-and-evyatar.itch.io/perfect-heist-guide-level), [סרטון מהטלפון](https://youtu.be/fIYPyt7VN1s) |
