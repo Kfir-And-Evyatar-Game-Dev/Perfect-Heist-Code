@@ -58,7 +58,11 @@ public class LevelSpawner : MonoBehaviour
     public List<ExitZone> Vans => vans;
     public MapBuilder Map => map;
     public RunClock Clock => clock;
-    public float CameraOffSeconds => cameraOffSeconds;
+    /// <summary>How long "Camera off" lasts, including the live event bonus (LiveConfig).</summary>
+    public float CameraOffSeconds => cameraOffSeconds + LiveConfig.Current.ActiveCameraOffBonusSeconds;
+
+    /// <summary>The camera viewing radius, including the live event multiplier (LiveConfig).</summary>
+    public float CameraRadius => cameraRadius * LiveConfig.Current.ActiveCameraRadiusMultiplier;
 
     void Start()
     {
@@ -85,7 +89,7 @@ public class LevelSpawner : MonoBehaviour
                 {
                     case '&':
                         SecurityCamera cam = Instantiate(cameraPrefab, pos, Quaternion.identity, transform);
-                        cam.Init(map, cell, cameraRadius);
+                        cam.Init(map, cell, CameraRadius);
                         cameras.Add(cam);
                         break;
 
@@ -169,7 +173,7 @@ public class LevelSpawner : MonoBehaviour
 
         hacker.Plan.Clear();
         hacker.Plan.Add(new WaitCommand(3f));
-        hacker.Plan.Add(new DisableCameraCommand(cameras[0].Cell, cameraOffSeconds));
+        hacker.Plan.Add(new DisableCameraCommand(cameras[0].Cell, CameraOffSeconds));
         hacker.Plan.Add(new MoveCommand(exit));
 
         // The guard walks x=6 and sees 3 cells ahead, so column x=9 (3 cells away) is always safe.

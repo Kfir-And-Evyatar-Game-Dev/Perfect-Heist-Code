@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class MainMenuScreen : MonoBehaviour
 {
     RectTransform tutorialCard;
+    Text eventBanner;
 
     void Start()
     {
@@ -61,7 +62,22 @@ public class MainMenuScreen : MonoBehaviour
 
         Text credit = UIKit.NewText(canvas, "Kfir Nizri & Evyatar Aharon", 28, TextAnchor.MiddleCenter, UIKit.Muted);
         UIKit.Place(credit.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0, 30), new Vector2(1200, 40));
+
+        // Live Ops banner: filled in when the live config finishes downloading.
+        eventBanner = UIKit.NewText(canvas, "", 34, TextAnchor.MiddleCenter, UIKit.Gold, FontStyle.Bold);
+        UIKit.Place(eventBanner.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0, 90), new Vector2(1700, 50));
+        ShowLiveEvent();
+        if (!LiveConfigLoader.IsLoaded) LiveConfigLoader.Loaded += ShowLiveEvent;
     }
+
+    void ShowLiveEvent()
+    {
+        if (eventBanner == null) return;
+        LiveConfig config = LiveConfig.Current;
+        eventBanner.text = config.IsEventActive ? $"LIVE EVENT: {config.eventTitle}. {config.eventMessage}" : "";
+    }
+
+    void OnDestroy() => LiveConfigLoader.Loaded -= ShowLiveEvent;
 
     RectTransform BuildCard(Transform parent, LevelInfo level, Sprite icon, GameManager gm)
     {

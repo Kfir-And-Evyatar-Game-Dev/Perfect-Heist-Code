@@ -411,10 +411,66 @@ int stars = attempts > rules.maxAttemptsForFullRating ? rules.fallbackStars
 
 ## 10. ניהול חי (Live Ops)
 
+**קונפיגורציה** היא קובץ הגדרות שהמשחק קורא כשהוא עולה, במקום שהערכים יהיו כתובים בתוך הקוד. כשהקובץ יושב באינטרנט, משנים אותו וכל השחקנים מקבלים את השינוי בכניסה הבאה, בלי build חדש ובלי העלאה מחדש ל־itch.
+
 ### טעינה דינמית של קונפיגורציה
+
+| רכיב | מה הוא עושה |
+|---|---|
+| [`liveops/config.json`](liveops/config.json) | קובץ ההגדרות. הוא נמצא בריפו ומוגש דרך GitHub Pages: `https://kfir-and-evyatar-game-dev.github.io/Perfect-Heist-prototype/liveops/config.json` |
+| [`LiveConfig`](Assets/Scripts/Game/LiveConfig.cs) | מחלקה `[Serializable]` ששמות השדות שלה זהים למפתחות ב־JSON: `version`, `eventId`, `eventTitle`, `eventMessage`, `startUtc`, `endUtc`, `forceActive`, `cameraRadiusMultiplier`, `cameraOffBonusSeconds`. ערכי ברירת המחדל הם קבועים בעלי שם (`NoChangeMultiplier = 1`, `NoBonusSeconds = 0`) שמשמעותם "אין אירוע". `LiveConfig.Current` מחזיק את ההגדרות שבשימוש |
+| [`LiveConfigLoader`](Assets/Scripts/Game/LiveConfigLoader.cs) | נוצר לבד לפני הסצנה הראשונה (`RuntimeInitializeOnLoadMethod`) ונשאר בין הסצנות (`DontDestroyOnLoad`). מוריד את הקובץ עם `UnityWebRequest` בתבנית `async Awaitable`, ומפענח עם `JsonUtility.FromJson<LiveConfig>`. לכתובת מוסיפים `?t=<ticks>` כדי לעקוף עותק ישן מהמטמון. ה־URL וה־timeout הם קבועים בעלי שם. בסיום מעלה את האירוע `Loaded` |
+| **גיבוי** | אם אין אינטרנט, אם השרת לא עונה תוך `TimeoutSeconds`, או אם ה־JSON שבור, המשחק ממשיך עם ברירת המחדל (בלי אירוע) וכותב `Debug.LogWarning`. השחקן לא נתקע |
+| **בדיקה בעורך** | ב־Unity Editor, כש־`UseLocalFileInEditor` דלוק, הקובץ נקרא ישירות מהתיקייה של הריפו, כך שאפשר לשנות ערך וללחוץ Play בלי push |
+| **מתי האירוע פעיל** | `LiveConfig.IsActiveAt(utcNow)`: אם `eventId` ריק, אין אירוע. אם `forceActive` דלוק, האירוע פעיל. אחרת הוא פעיל רק בין `startUtc` ל־`endUtc` (UTC) |
+
+```csharp
+async Awaitable<string> DownloadAsync()
+{
+    using UnityWebRequest request = UnityWebRequest.Get(ConfigUrl + "?t=" + DateTime.UtcNow.Ticks);
+    request.timeout = TimeoutSeconds;
+    await request.SendWebRequest();
+    if (request.result != UnityWebRequest.Result.Success) return null;   // keep the defaults
+    return request.downloadHandler.text;
+}
+// ...
+LiveConfig.Current = JsonUtility.FromJson<LiveConfig>(json);
+```
 
 ### אירוע חי לדוגמה
 
+**"Faulty Cameras Weekend" – סוף שבוע של מצלמות תקולות.** בסיפור: מערכת המצלמות של "קושובייב אבטחה" קרסה בכל הייסטרפורט, וזו הזדמנות לצוות.
+
+| איפה | מה משתנה | בקוד |
+|---|---|---|
+| תפריט ראשי | באנר זהוב: *"LIVE EVENT: Faulty Cameras Weekend. Cameras see less, hacks last longer!"* | `MainMenuScreen.ShowLiveEvent`, נרשם ל־`LiveConfigLoader.Loaded` אם ההורדה עוד לא הסתיימה |
+| רדיוס המצלמות | מוכפל ב־`cameraRadiusMultiplier` (‏0.5: מ־2 תאים לתא אחד) | `LevelSpawner.CameraRadius => cameraRadius * LiveConfig.Current.ActiveCameraRadiusMultiplier` |
+| משך "Camera off" | מתארך ב־`cameraOffBonusSeconds` (‏+4: מ־8 ל־12 שניות) | `LevelSpawner.CameraOffSeconds`, שממנו לוקחים `PlanningUI` ו־`TutorialDirector` את משך הפקודה ואת הטקסט בהדרכה |
+
+```json
+{
+  "version": 1,
+  "eventId": "faulty-cameras-weekend",
+  "eventTitle": "Faulty Cameras Weekend",
+  "eventMessage": "Cameras see less, hacks last longer!",
+  "startUtc": "2026-11-27T00:00:00Z",
+  "endUtc": "2026-11-30T00:00:00Z",
+  "forceActive": true,
+  "cameraRadiusMultiplier": 0.5,
+  "cameraOffBonusSeconds": 4
+}
+```
+
+`forceActive` דלוק לצורך הבדיקה, כדי שהאירוע יופיע בכל תאריך. במשחק אמיתי הוא כבוי, והאירוע רץ רק בסוף השבוע שבין `startUtc` ל־`endUtc`.
+
+**איך זה ישתלב במשחק המלא:** אותו מנגנון יחליף ערכים ב־`DifficultySettings` (סעיף 1), למשל `secondsToCapture` ארוך יותר בסוף שבוע "שומרים עייפים", או חוזה מיוחד בעיר (`HeistDefinition`, סעיף 7) שזמין רק בזמן האירוע.
+
 ### איך בודקים את האירוע
+
+ההוראות המלאות נמצאות ב־README, בסעיף [מטלה 5: בדיקת האירוע החי](README.md#מטלה-5-בדיקת-האירוע-החי-live-ops). בקצרה:
+
+1. פותחים את [המשחק ב־itch](https://kfir-and-evyatar.itch.io/perfect-heist-prototype). בתפריט מופיע הבאנר, ובהדרכה העיגול של המצלמה קטן ו־"Camera off" נמשך 12 שניות.
+2. ב־`liveops/config.json` משנים ל־`"eventId": ""` (או `"forceActive": false` מחוץ לתאריכי האירוע), עושים commit ו־push, מחכים כדקה ומרעננים את itch.
+3. הבאנר נעלם, הרדיוס חוזר ל־2 ו־"Camera off" חוזר ל־8 שניות, בלי build חדש.
 
 </div>

@@ -84,7 +84,7 @@ public class TutorialDirector : MonoBehaviour
             GuideStep.Tap("Now tap 'Camera off'.", () => Btn("camera"), () => ui.Mode == PlanMode.ChooseCamera),
             GuideStep.Tap("Tap the security camera to switch it off.",
                           () => World(cam.transform.position, Vector2.one), () => LastIs<DisableCameraCommand>(H)),
-            GuideStep.Show("At second 3 the camera switches off, for 8 seconds.", () => ui.LastBlockScreenRect(H)),
+            GuideStep.Show($"At second 3 the camera switches off, for {spawner.CameraOffSeconds:0} seconds.", () => ui.LastBlockScreenRect(H)),
             GuideStep.Tap("Now the Hacker escapes to the van. Tap 'Walk'.", () => Btn("walk"), () => ui.Mode == PlanMode.ChooseCell),
             GuideStep.Tap("Tap the glowing spot by the van.", () => Cell(van), () => LastMoveTo(H, van)),
             GuideStep.Tap("The Hacker's plan is ready! Tap 'Done'.", () => UIKit.ScreenRect(ui.DoneButtonRect), () => !ui.PanelOpen),

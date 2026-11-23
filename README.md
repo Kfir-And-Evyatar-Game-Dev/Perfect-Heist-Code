@@ -12,9 +12,32 @@
 | **לשחק בדפדפן** | **[kfir-and-evyatar.itch.io/perfect-heist-prototype](https://kfir-and-evyatar.itch.io/perfect-heist-prototype)** (גם בטלפון, לרוחב) |
 | **רכיבים דרמטיים (מטלה 5)** | [dramatic-elements.md](dramatic-elements.md) |
 | **לשחק בעלילה (Twine)** | **[גרסת הדפדפן של הסיפור](https://kfir-and-evyatar-game-dev.github.io/Perfect-Heist-prototype/twine/perfect-heist-story.html)**, [קובץ המקור](twine/perfect-heist-story.twee) |
+| **אירוע חי (Live Ops) ואיך בודקים אותו** | [מטלה 5: בדיקת האירוע החי](#מטלה-5-בדיקת-האירוע-החי-live-ops) (בהמשך הקובץ) |
 | **הרצה, תרשים מחלקות והחלטות ארכיטקטורה** | [מטלה 4: הרצה וארכיטקטורה](#מטלה-4--הרצה-וארכיטקטורה) (בהמשך הקובץ) |
 | **תכנון הרמות של המשחק הזה** | [Level_Design.md: השוד המושלם](https://github.com/Kfir-And-Evyatar-Game-Dev/---Perfect-Heist/blob/main/Level_Design.md), עם מפות ותרשימים |
 | **הגרסה של מטלה 3 (רמת המדריך)** | [itch.io](https://kfir-and-evyatar.itch.io/perfect-heist-guide-level), [סרטון מהטלפון](https://youtu.be/fIYPyt7VN1s) |
+
+### מטלה 5: בדיקת האירוע החי (Live Ops)
+
+המשחק מוריד בכל הפעלה את קובץ ההגדרות **[liveops/config.json](liveops/config.json)** מ־GitHub Pages ‏([LiveConfigLoader.cs](Assets/Scripts/Game/LiveConfigLoader.cs)). כרגע פעיל בו האירוע **"Faulty Cameras Weekend"**: מערכת המצלמות של "קושובייב אבטחה" קרסה, ולכן המצלמות רואות פחות והפריצה אליהן מחזיקה יותר זמן.
+
+**מה רואים כשהאירוע פעיל:**
+1. בתפריט הראשי, מעל שמות היוצרים, מופיע באנר זהוב: `LIVE EVENT: Faulty Cameras Weekend. Cameras see less, hacks last longer!`
+2. בשלב ההדרכה, העיגול האדום של המצלמה קטן מ־2 תאים לתא אחד (`cameraRadiusMultiplier: 0.5`).
+3. הבלוק "Camera off" בציר הזמן של ההאקר נמשך 12 שניות במקום 8 (`cameraOffBonusSeconds: 4`).
+
+**איך מכבים או משנים את האירוע, בלי build חדש:**
+
+| מה רוצים | מה משנים ב־`liveops/config.json` | מה רואים אחרי push ורענון של עמוד itch |
+|---|---|---|
+| לכבות את האירוע | `"forceActive": false` (התאריכים 27–30.11.2026 עדיין יפעילו אותו בסוף השבוע הזה) | באנר נעלם, הרדיוס חוזר ל־2, "Camera off" חוזר ל־8 שניות |
+| לכבות לגמרי | `"eventId": ""` | אותו דבר, בלי קשר לתאריכים |
+| מצלמות חזקות במקום חלשות | `"cameraRadiusMultiplier": 1.5` | העיגול האדום גדל ל־3 תאים |
+| הפעלה רק לפי תאריך | `"forceActive": false` ותאריכים חדשים ב־`startUtc` / `endUtc` (UTC) | האירוע מופיע רק בטווח התאריכים |
+
+אחרי push לוקח ל־GitHub Pages כדקה או שתיים להתעדכן. המשחק מוסיף לכתובת `?t=<זמן>` כדי לא לקבל עותק ישן. אם ההורדה נכשלת, המשחק ממשיך בלי אירוע וכותב אזהרה ל־Console.
+
+**בתוך Unity:** בעורך המשחק קורא את `liveops/config.json` ישירות מהתיקייה (`LiveConfigLoader.UseLocalFileInEditor`), אז אפשר לשנות את הקובץ וללחוץ Play בלי push.
 
 ### מטלה 4: הפיסיקה בשלושת המשחקים
 
