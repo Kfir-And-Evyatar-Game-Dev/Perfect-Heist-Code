@@ -374,6 +374,7 @@ public class PlanningUI : MonoBehaviour
             case CharacterRole.Sneak: return new Color(0.75f, 0.5f, 1f);
             case CharacterRole.Burglar: return new Color(1f, 0.6f, 0.2f);
             case CharacterRole.Impostor: return new Color(0.35f, 0.85f, 0.4f);
+            case CharacterRole.Technician: return new Color(1f, 0.45f, 0.7f);
             default: return new Color(1f, 0.85f, 0.25f);
         }
     }
