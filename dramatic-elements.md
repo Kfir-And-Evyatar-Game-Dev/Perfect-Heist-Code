@@ -26,26 +26,22 @@
 
 השחקן בוחר רמה במסך הבית, לפני בחירת השוד. כל רמה היא asset של **`DifficultySettings`**, ‏ScriptableObject אחד שמחזיק את כל הערכים שמשתנים. `GameManager` שומר את הרמה שנבחרה, וכל אובייקט במשחק קורא ממנה את הערכים שלו, במקום מספרים שכתובים בקוד.
 
-```csharp
-[CreateAssetMenu(menuName = "Perfect Heist/Difficulty Settings")]
-public class DifficultySettings : ScriptableObject
-{
-    public string displayName;          // "Easy" / "Medium" / "Hard"
-    public int teamSize;                // how many characters must be chosen
-    public float cameraRadius;          // in tiles
-    public float secondsToCapture;      // from alarm until a character is caught
-    public float cameraDisableSeconds;  // Hacker ability duration
-    public float distractSeconds;       // Impostor ability duration
-    public float laserDisableSeconds;   // Technician ability duration
-    public float lockpickSeconds;       // locked door, Burglar
-    public float lockpickOthersSeconds; // locked door, everyone else
-    public float safeOpenSeconds;       // safe, Burglar
-    public float safeOpenOthersSeconds; // safe, everyone else
-    public float runTimeLimit;          // 0 = no time window
-    public SafeCodeType safeCode;       // None / Split / Riddle
-    public int abilityUsesPerAttempt;   // uses per active ability, per attempt
-}
-```
+ה־ScriptableObject מוגדר עם `CreateAssetMenu` (תפריט "Perfect Heist ← Difficulty Settings"), כך שיוצרים את שלוש הרמות מתוך Unity בלי קוד. השדות שלו:
+
+| שדה | סוג | משמעות |
+|---|---|---|
+| `displayName` | טקסט | שם הרמה במסך: Easy / Medium / Hard |
+| `teamSize` | מספר שלם | כמה דמויות חובה לבחור לצוות |
+| `cameraRadius` | עשרוני | רדיוס הראייה של מצלמה, בתאים |
+| `secondsToCapture` | עשרוני | כמה שניות עוברות מהאזעקה עד שהדמות נתפסת |
+| `cameraDisableSeconds` | עשרוני | משך היכולת של ההאקר (כיבוי מצלמה) |
+| `distractSeconds` | עשרוני | משך היכולת של המתחזה (הסחת שומר) |
+| `laserDisableSeconds` | עשרוני | משך היכולת של הטכנאי (כיבוי לייזר) |
+| `lockpickSeconds` / `lockpickOthersSeconds` | עשרוני | זמן פתיחת דלת נעולה לפורץ / לכל דמות אחרת |
+| `safeOpenSeconds` / `safeOpenOthersSeconds` | עשרוני | זמן פתיחת כספת לפורץ / לכל דמות אחרת |
+| `runTimeLimit` | עשרוני | חלון זמן להרצה. 0 פירושו בלי חלון זמן |
+| `safeCode` | enum ‏`SafeCodeType` | סוג קוד הכספת: None / Split / Riddle |
+| `abilityUsesPerAttempt` | מספר שלם | כמה פעמים אפשר להשתמש בכל יכולת פעילה בניסיון אחד |
 
 הערכים בשלושת ה-assets (לפי [תכנון הרמות](https://github.com/Kfir-And-Evyatar-Game-Dev/---Perfect-Heist/blob/main/Level_Design.md)), ואיזה קוד קורא כל אחד:
 
@@ -305,21 +301,19 @@ xychart-beta
 
 **כדי להגיע לבנק** צריך לסיים את המוזיאון **וגם** לאסוף מספר מסוים של קצות חוטים. ככה הצוות מתפתח בעיר, עובר במקומות נוספים ומתחזק לפני העימות האחרון, ואפשר להוסיף כל מקום חדש לסיפור בלי לכתוב אותו מחדש.
 
-כל מקום שוד מוגדר כנתונים, ולא בקוד:
+כל מקום שוד מוגדר כנתונים, ולא בקוד: asset של ScriptableObject בשם **`HeistDefinition`** (נוצר מהתפריט "Perfect Heist ← Heist Definition"), עם השדות:
 
-```csharp
-[CreateAssetMenu(menuName = "Perfect Heist/Heist Definition")]
-public class HeistDefinition : ScriptableObject
-{
-    public string displayName;           // "Harbor Warehouse"
-    public string district;              // area on the city map
-    public bool isStoryHeist;            // jewelry store / museum / bank
-    public HeistDefinition[] unlockedBy; // heists that must be completed first
-    public bool givesLead;               // adds a lead toward Koshuvayev's vault
-    public int lootReward;
-    public string storyPassage;          // the hideout scene shown after success
-}
-```
+| שדה | משמעות |
+|---|---|
+| `displayName` | שם המקום, למשל "Harbor Warehouse" |
+| `district` | האזור במפת העיר שבו המקום מופיע |
+| `isStoryHeist` | האם זה שוד של העלילה (תכשיטים / מוזיאון / בנק) או חוזה בעיר |
+| `unlockedBy` | רשימה של `HeistDefinition` אחרים שצריך להשלים לפני שהמקום נפתח |
+| `givesLead` | האם ההצלחה מוסיפה קצה חוט לכספת של קושובייב |
+| `lootReward` | כמה נקודות שלל ההצלחה נותנת |
+| `storyPassage` | שם הסצנה במחבוא שמוצגת אחרי ההצלחה |
+
+מפת העיר עוברת על כל ה־assets ומציגה מקום כפתוח רק אם כל המקומות ב־`unlockedBy` הושלמו.
 
 והתנאי לפתיחת הבנק נשמר כשדה אחד, `leadsToFinale`, כך שכשמוסיפים חוזים אפשר להעלות אותו בלי לגעת בקוד.
 
@@ -411,13 +405,7 @@ public class HeistDefinition : ScriptableObject
 | הצלחה עם אזעקה, עד 5 ניסיונות | ★★ |
 | הצלחה אחרי יותר מ־5 ניסיונות (שקטה או עם אזעקה) | ★ |
 
-הגבול של 5 ניסיונות מונע ניחוש: מי שמנסה סדרים באקראיות עד שמשהו עובד עדיין מצליח, אבל פתרון שנבנה מתכנון שווה יותר כוכבים. הניסיונות נספרים ב־`GameManager.Attempts`, ורק לחיצה על RUN נחשבת ניסיון (עריכה ותצוגה מקדימה לא נספרות). הערכים לא כתובים בקוד אלא בשדות `maxAttemptsForFullRating = 5`, `quietStars = 3`, `alarmStars = 2` ו־`fallbackStars = 1` של ScriptableObject בשם `StarRules`, ו־`WinScreen` מחשב:
-
-```csharp
-int stars = attempts > rules.maxAttemptsForFullRating ? rules.fallbackStars
-          : alarmTriggered ? rules.alarmStars
-          : rules.quietStars;
-```
+הגבול של 5 ניסיונות מונע ניחוש: מי שמנסה סדרים באקראיות עד שמשהו עובד עדיין מצליח, אבל פתרון שנבנה מתכנון שווה יותר כוכבים. הניסיונות נספרים ב־`GameManager.Attempts`, ורק לחיצה על RUN נחשבת ניסיון (עריכה ותצוגה מקדימה לא נספרות). הערכים לא כתובים בקוד אלא בשדות `maxAttemptsForFullRating = 5`, `quietStars = 3`, `alarmStars = 2` ו־`fallbackStars = 1` של ScriptableObject בשם `StarRules`. `WinScreen` מחשב את הדירוג בסדר הזה: קודם בודק אם מספר הניסיונות גדול מ־`maxAttemptsForFullRating`, ואם כן נותן `fallbackStars`. אחרת בודק אם הייתה אזעקה בהרצה שהצליחה, ואם כן נותן `alarmStars`. אחרת נותן `quietStars`.
 
 מסך התוצאה מציג את הכוכבים, את מספר הניסיונות ואת השיא האישי. במצב ״שיפור שיא״ המוצע, מונה הניסיונות מתאפס, ומשחק חוזר יעדכן את הדירוג בלבד. כך אפשר לנסות פתרון אחר בלי לשנות את השלל, הבחירות או רמת המבוקשות של הקמפיין.
 
@@ -436,18 +424,12 @@ int stars = attempts > rules.maxAttemptsForFullRating ? rules.fallbackStars
 | **בדיקה בעורך** | ב־Unity Editor, כש־`UseLocalFileInEditor` דלוק, הקובץ נקרא ישירות מהתיקייה של הריפו, כך שאפשר לשנות ערך וללחוץ Play בלי push |
 | **מתי האירוע פעיל** | `LiveConfig.IsActiveAt(utcNow)`: אם `eventId` ריק, אין אירוע. אם `forceActive` דלוק, האירוע פעיל. אחרת הוא פעיל רק בין `startUtc` ל־`endUtc` (UTC) |
 
-```csharp
-async Awaitable<string> DownloadAsync()
-{
-    using UnityWebRequest request = UnityWebRequest.Get(ConfigUrl + "?t=" + DateTime.UtcNow.Ticks);
-    request.timeout = TimeoutSeconds;
-    await request.SendWebRequest();
-    if (request.result != UnityWebRequest.Result.Success) return null;   // keep the defaults
-    return request.downloadHandler.text;
-}
-// ...
-LiveConfig.Current = JsonUtility.FromJson<LiveConfig>(json);
-```
+**סדר הפעולות בטעינה:**
+1. בונים את הכתובת: ה־URL הקבוע ועוד `?t=` עם הזמן הנוכחי.
+2. יוצרים בקשת GET עם `UnityWebRequest`, קובעים לה timeout, ומחכים לה עם `await` בלי לעצור את המשחק.
+3. אם הבקשה נכשלה, משאירים את ברירת המחדל וכותבים אזהרה.
+4. אם הצליחה, מפענחים את הטקסט עם `JsonUtility.FromJson` לאובייקט `LiveConfig` ושמים אותו ב־`LiveConfig.Current`.
+5. מעלים את האירוע `Loaded`, והתפריט הראשי מעדכן את הבאנר.
 
 ### אירוע חי לדוגמה
 
@@ -456,22 +438,20 @@ LiveConfig.Current = JsonUtility.FromJson<LiveConfig>(json);
 | איפה | מה משתנה | בקוד |
 |---|---|---|
 | תפריט ראשי | באנר זהוב: *"LIVE EVENT: Faulty Cameras Weekend. Cameras see less, hacks last longer!"* | `MainMenuScreen.ShowLiveEvent`, נרשם ל־`LiveConfigLoader.Loaded` אם ההורדה עוד לא הסתיימה |
-| רדיוס המצלמות | מוכפל ב־`cameraRadiusMultiplier` (‏0.5: מ־2 תאים לתא אחד) | `LevelSpawner.CameraRadius => cameraRadius * LiveConfig.Current.ActiveCameraRadiusMultiplier` |
+| רדיוס המצלמות | מוכפל ב־`cameraRadiusMultiplier` (‏0.5: מ־2 תאים לתא אחד) | `LevelSpawner.CameraRadius`: הרדיוס של השלב כפול `ActiveCameraRadiusMultiplier` (או 1 כשאין אירוע) |
 | משך "Camera off" | מתארך ב־`cameraOffBonusSeconds` (‏+4: מ־8 ל־12 שניות) | `LevelSpawner.CameraOffSeconds`, שממנו לוקחים `PlanningUI` ו־`TutorialDirector` את משך הפקודה ואת הטקסט בהדרכה |
 
-```json
-{
-  "version": 1,
-  "eventId": "faulty-cameras-weekend",
-  "eventTitle": "Faulty Cameras Weekend",
-  "eventMessage": "Cameras see less, hacks last longer!",
-  "startUtc": "2026-11-27T00:00:00Z",
-  "endUtc": "2026-11-30T00:00:00Z",
-  "forceActive": true,
-  "cameraRadiusMultiplier": 0.5,
-  "cameraOffBonusSeconds": 4
-}
-```
+**הערכים בקובץ ההגדרות של האירוע:**
+
+| מפתח | ערך | משמעות |
+|---|---|---|
+| `version` | 1 | מספר גרסה של הקובץ, מודפס ללוג |
+| `eventId` | faulty-cameras-weekend | מזהה האירוע. ריק פירושו אין אירוע |
+| `eventTitle` / `eventMessage` | Faulty Cameras Weekend / Cameras see less, hacks last longer! | הטקסט בבאנר |
+| `startUtc` / `endUtc` | 27.11.2026 עד 30.11.2026 (UTC) | חלון התאריכים של האירוע |
+| `forceActive` | true | מפעיל את האירוע בלי קשר לתאריכים |
+| `cameraRadiusMultiplier` | 0.5 | כפולה של רדיוס המצלמות |
+| `cameraOffBonusSeconds` | 4 | שניות נוספות לכיבוי מצלמה |
 
 `forceActive` דלוק לצורך הבדיקה, כדי שהאירוע יופיע בכל תאריך. במשחק אמיתי הוא כבוי, והאירוע רץ רק בסוף השבוע שבין `startUtc` ל־`endUtc`.
 
