@@ -11,7 +11,7 @@ using UnityEngine.Networking;
 /// </summary>
 public class LiveConfigLoader : MonoBehaviour
 {
-    const string ConfigUrl = "https://kfir-and-evyatar-game-dev.github.io/Perfect-Heist-prototype/liveops/config.json";
+    const string ConfigUrl = "https://kfir-and-evyatar-game-dev.github.io/Perfect-Heist-Code/liveops/config.json";
     const string LocalConfigPath = "liveops/config.json";
     const int TimeoutSeconds = 10;
 

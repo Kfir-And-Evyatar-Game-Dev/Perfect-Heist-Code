@@ -1,8 +1,8 @@
 <div dir="rtl">
 
-# השוד המושלם: אב טיפוס | PERFECT HEIST – Prototype
+# השוד המושלם: קוד המשחק | PERFECT HEIST – Code
 
-**מטלה 4** בקורס פיתוח משחקי מחשב: מימוש תהליך הליבה, פיסיקה וארכיטקטורה. ממשיך את רמת המדריך ממטלה 3.
+**קוד המשחק (Unity)** בקורס פיתוח משחקי מחשב. התחיל כאב טיפוס במטלה 4 (תהליך הליבה, פיסיקה וארכיטקטורה, בהמשך לרמת המדריך ממטלה 3), ובמטלה 5 נוסף לו אירוע חי (Live Ops). כל מסמכי העיצוב נמצאים במאגר [Perfect-Heist-Design](https://github.com/Kfir-And-Evyatar-Game-Dev/Perfect-Heist-Design).
 **חברי הצוות:** כפיר נזרי, אביתר אהרון.
 
 > **השוד מתחיל בתוכנית טובה, לא במרוץ נגד השעון.**
@@ -10,11 +10,11 @@
 | | |
 |---|---|
 | **לשחק בדפדפן** | **[kfir-and-evyatar.itch.io/perfect-heist-prototype](https://kfir-and-evyatar.itch.io/perfect-heist-prototype)** (גם בטלפון, לרוחב) |
-| **רכיבים דרמטיים (מטלה 5)** | [dramatic-elements.md](dramatic-elements.md) |
-| **לשחק בעלילה (Twine)** | **[גרסת הדפדפן של הסיפור](https://kfir-and-evyatar-game-dev.github.io/Perfect-Heist-prototype/twine/perfect-heist-story.html)**, [קובץ המקור](twine/perfect-heist-story.twee) |
+| **רכיבים דרמטיים (מטלה 5)** | [dramatic-elements.md (במאגר העיצוב)](https://github.com/Kfir-And-Evyatar-Game-Dev/Perfect-Heist-Design/blob/main/dramatic-elements.md) |
+| **לשחק בעלילה (Twine)** | **[גרסת הדפדפן של הסיפור](https://kfir-and-evyatar-game-dev.github.io/Perfect-Heist-Design/twine/perfect-heist-story.html)**, [קובץ המקור](https://github.com/Kfir-And-Evyatar-Game-Dev/Perfect-Heist-Design/blob/main/twine/perfect-heist-story.twee) |
 | **אירוע חי (Live Ops) ואיך בודקים אותו** | [מטלה 5: בדיקת האירוע החי](#מטלה-5-בדיקת-האירוע-החי-live-ops) (בהמשך הקובץ) |
 | **הרצה, תרשים מחלקות והחלטות ארכיטקטורה** | [מטלה 4: הרצה וארכיטקטורה](#מטלה-4--הרצה-וארכיטקטורה) (בהמשך הקובץ) |
-| **תכנון הרמות של המשחק הזה** | [Level_Design.md: השוד המושלם](https://github.com/Kfir-And-Evyatar-Game-Dev/---Perfect-Heist/blob/main/Level_Design.md), עם מפות ותרשימים |
+| **תכנון הרמות של המשחק הזה** | [Level_Design.md: השוד המושלם](https://github.com/Kfir-And-Evyatar-Game-Dev/Perfect-Heist-Design/blob/main/Level_Design.md), עם מפות ותרשימים |
 | **הגרסה של מטלה 3 (רמת המדריך)** | [itch.io](https://kfir-and-evyatar.itch.io/perfect-heist-guide-level), [סרטון מהטלפון](https://youtu.be/fIYPyt7VN1s) |
 
 ### מטלה 5: בדיקת האירוע החי (Live Ops)
@@ -59,11 +59,11 @@
 | **Collision2D** | [כיבוש המפה](https://github.com/Kfir-And-Evyatar-Game-Dev/Map-Conquest-Prototype), [רעש שמציל](https://github.com/Kfir-And-Evyatar-Game-Dev/Sound-of-Survival-prototype) |
 
 ### הריפוזיטוריז של המשחקים
-| משחק | אב טיפוס (מטלה 4) | תכנון (מטלות 1–3) |
+| משחק | קוד | עיצוב |
 |---|---|---|
-| השוד המושלם | הריפו הזה | [---Perfect-Heist](https://github.com/Kfir-And-Evyatar-Game-Dev/---Perfect-Heist) |
-| כיבוש המפה | [Map-Conquest-Prototype](https://github.com/Kfir-And-Evyatar-Game-Dev/Map-Conquest-Prototype) | [---Map-Conquest](https://github.com/Kfir-And-Evyatar-Game-Dev/---Map-Conquest) |
-| רעש שמציל | [Sound-of-Survival-prototype](https://github.com/Kfir-And-Evyatar-Game-Dev/Sound-of-Survival-prototype) | [---sound-of-survival](https://github.com/Kfir-And-Evyatar-Game-Dev/---sound-of-survival) |
+| השוד המושלם | הריפו הזה | [Perfect-Heist-Design](https://github.com/Kfir-And-Evyatar-Game-Dev/Perfect-Heist-Design) |
+| כיבוש המפה | [Map-Conquest-Prototype](https://github.com/Kfir-And-Evyatar-Game-Dev/Map-Conquest-Prototype) | [Map-Conquest](https://github.com/Kfir-And-Evyatar-Game-Dev/Map-Conquest) |
+| רעש שמציל | [Sound-of-Survival-prototype](https://github.com/Kfir-And-Evyatar-Game-Dev/Sound-of-Survival-prototype) | [Sound-of-Survival](https://github.com/Kfir-And-Evyatar-Game-Dev/Sound-of-Survival) |
 
 ---
 
