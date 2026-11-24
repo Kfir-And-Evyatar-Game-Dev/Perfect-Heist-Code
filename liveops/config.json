@@ -5,7 +5,7 @@
   "eventMessage": "Cameras see less, hacks last longer!",
   "startUtc": "2027-06-04T00:00:00Z",
   "endUtc": "2027-06-07T00:00:00Z",
-  "forceActive": false,
+  "forceActive": true,
   "cameraRadiusMultiplier": 0.5,
   "cameraOffBonusSeconds": 4
 }
