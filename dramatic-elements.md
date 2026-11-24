@@ -448,7 +448,7 @@ xychart-beta
 | `version` | 1 | מספר גרסה של הקובץ, מודפס ללוג |
 | `eventId` | faulty-cameras-weekend | מזהה האירוע. ריק פירושו אין אירוע |
 | `eventTitle` / `eventMessage` | Faulty Cameras Weekend / Cameras see less, hacks last longer! | הטקסט בבאנר |
-| `startUtc` / `endUtc` | 27.11.2026 עד 30.11.2026 (UTC) | חלון התאריכים של האירוע |
+| `startUtc` / `endUtc` | 4.6.2027 עד 7.6.2027 (UTC) | חלון התאריכים של האירוע |
 | `forceActive` | true | מפעיל את האירוע בלי קשר לתאריכים |
 | `cameraRadiusMultiplier` | 0.5 | כפולה של רדיוס המצלמות |
 | `cameraOffBonusSeconds` | 4 | שניות נוספות לכיבוי מצלמה |
@@ -462,7 +462,8 @@ xychart-beta
 ההוראות המלאות נמצאות ב־README, בסעיף [מטלה 5: בדיקת האירוע החי](README.md#מטלה-5-בדיקת-האירוע-החי-live-ops). בקצרה:
 
 1. פותחים את [המשחק ב־itch](https://kfir-and-evyatar.itch.io/perfect-heist-prototype). בתפריט מופיע הבאנר, ובהדרכה העיגול של המצלמה קטן ו־"Camera off" נמשך 12 שניות.
-2. ב־`liveops/config.json` משנים ל־`"eventId": ""` (או `"forceActive": false` מחוץ לתאריכי האירוע), עושים commit ו־push, מחכים כדקה ומרעננים את itch.
-3. הבאנר נעלם, הרדיוס חוזר ל־2 ו־"Camera off" חוזר ל־8 שניות, בלי build חדש.
+2. **בדיקה עצמאית:** פותחים את הריפו ב־Unity, משנים ב־`liveops/config.json` ל־`"forceActive": false` ולוחצים Play. בעורך הקובץ נקרא ישירות מהדיסק, אז השינוי מופיע מיד.
+3. **בגרסה החיה:** אותו שינוי עם commit ל־GitHub. אחרי דקה־שתיים מרעננים את itch, בלי build חדש.
+4. בשני המקרים הבאנר נעלם, הרדיוס חוזר ל־2 ו־"Camera off" חוזר ל־8 שניות. חלון התאריכים של האירוע הוא 4–7.6.2027, כך ש־`false` מכבה אותו בכל בדיקה עד אז.
 
 </div>
