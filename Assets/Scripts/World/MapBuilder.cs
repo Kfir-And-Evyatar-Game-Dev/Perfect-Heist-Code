@@ -50,7 +50,21 @@ public class MapBuilder : MonoBehaviour
 
     const string WallVisualsName = "Wall Visuals";
 
-    string[] Rows => layout.Replace("\r", "").Split('\n');
+    string cachedLayout;
+    string[] cachedRows;
+
+    string[] Rows
+    {
+        get
+        {
+            if (cachedRows == null || cachedLayout != layout)
+            {
+                cachedLayout = layout;
+                cachedRows = layout.Replace("\r", "").Split('\n');
+            }
+            return cachedRows;
+        }
+    }
 
     public int Width => Rows[0].Length;
     public int Height => Rows.Length;
@@ -76,6 +90,14 @@ public class MapBuilder : MonoBehaviour
     {
         Vector3 local = floorTilemap.transform.InverseTransformPoint(world);
         return new Vector2(local.x - 0.5f, Height - 0.5f - local.y);
+    }
+
+    /// <summary>Applies a room tint to one floor tile after building the map.</summary>
+    public void SetFloorColor(int x, int y, Color color)
+    {
+        Vector3Int cell = DocToCell(x, y);
+        floorTilemap.SetTileFlags(cell, TileFlags.None);
+        floorTilemap.SetColor(cell, color);
     }
 
     public void EnableWallCollisions3D()
@@ -196,7 +218,7 @@ public class MapBuilder : MonoBehaviour
         }
 
 #if UNITY_EDITOR
-        Undo.RegisterCompleteObjectUndo(new Object[] { floorTilemap, wallsTilemap }, "Build Map");
+        if (!Application.isPlaying) Undo.RegisterCompleteObjectUndo(new Object[] { floorTilemap, wallsTilemap }, "Build Map");
 #endif
 
         floorTilemap.ClearAllTiles();
@@ -220,7 +242,7 @@ public class MapBuilder : MonoBehaviour
         {
             Transform cam = Camera.main.transform;
 #if UNITY_EDITOR
-            Undo.RecordObject(cam, "Center Camera");
+            if (!Application.isPlaying) Undo.RecordObject(cam, "Center Camera");
 #endif
             cam.position = new Vector3(Width / 2f, Height / 2f, cam.position.z);
         }
@@ -260,7 +282,7 @@ public class MapBuilder : MonoBehaviour
         var root = new GameObject(WallVisualsName).transform;
         root.SetParent(transform, false);
 #if UNITY_EDITOR
-        Undo.RegisterCreatedObjectUndo(root.gameObject, "Build Thin Walls");
+        if (!Application.isPlaying) Undo.RegisterCreatedObjectUndo(root.gameObject, "Build Thin Walls");
 #endif
 
         float t = wallThickness;

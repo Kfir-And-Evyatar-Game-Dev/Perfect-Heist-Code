@@ -8,7 +8,6 @@ public class LevelInfo
     public string title;
     public string subtitle;
     public string sceneName;
-    public bool locked;
     public bool isTutorial;
     public int teamSize = 2;
     public CharacterRole[] allowedRoles;
@@ -26,9 +25,9 @@ public class LevelInfo
     public static readonly LevelInfo[] All =
     {
         Tutorial,
-        new LevelInfo { title = "Jewelry Store", subtitle = "Coming soon", locked = true },
-        new LevelInfo { title = "Museum", subtitle = "Coming soon", locked = true },
-        new LevelInfo { title = "Bank", subtitle = "Coming soon", locked = true },
+        new LevelInfo { title = "Jewelry Store", subtitle = "Easy / 2 crew", sceneName = "JewelryStore", teamSize = 2 },
+        new LevelInfo { title = "Museum", subtitle = "Medium / 3 crew", sceneName = "Museum", teamSize = 3 },
+        new LevelInfo { title = "Bank", subtitle = "Hard / 4 crew", sceneName = "Bank", teamSize = 4 },
     };
 
     public bool Allows(CharacterRole role) => allowedRoles == null || System.Array.IndexOf(allowedRoles, role) >= 0;

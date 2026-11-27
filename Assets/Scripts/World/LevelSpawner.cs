@@ -10,6 +10,10 @@ public class GuardRoute
     public Vector2Int patrolEnd = new Vector2Int(6, 4);
     [Tooltip("Seconds for a full round trip.")]
     public float period = 8f;
+    public Vector2 stationaryFacing = Vector2.up;
+    public bool visitStorage;
+    public Vector2Int storageCell;
+    [Min(0f)] public float storageDwell;
 }
 
 /// <summary>
@@ -101,7 +105,7 @@ public class LevelSpawner : MonoBehaviour
                                            ?? new GuardRoute { guardNumber = number, patrolEnd = cell };
                         Guard guard = Instantiate(guardPrefab, pos, Quaternion.identity, transform);
                         guard.name = $"Guard G{number}";
-                        guard.Init(map, cell, route.patrolEnd, route.period);
+                        guard.Init(map, cell, route);
                         guards.Add(guard);
                         break;
 
@@ -148,7 +152,12 @@ public class LevelSpawner : MonoBehaviour
         foreach (CharacterRole role in gm.Team)
         {
             CharacterData data = team.Find(d => d.role == role)
-                                 ?? new CharacterData { role = role, displayName = CharacterCatalog.Get(role).name };
+                                 ?? new CharacterData
+                                 {
+                                     role = role,
+                                     displayName = CharacterCatalog.Get(role).name,
+                                     sprite = CharacterCatalog.Portrait(CharacterCatalog.Get(role)),
+                                 };
             crew.Add(data);
         }
         return crew;

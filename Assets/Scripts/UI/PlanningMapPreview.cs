@@ -73,14 +73,19 @@ internal sealed class PlanningMapPreview
     {
         foreach (Guard g in spawner.Guards)
         {
-            Vector2 a = g.PatrolStart, b = g.PatrolEnd;
-            int dots = Mathf.Max(1, Mathf.CeilToInt(Vector2.Distance(a, b) / 0.3f));
-            for (int i = 0; i <= dots; i++)
-            {
-                SpriteRenderer dot = NewMarker("Patrol dot", map.DocToWorld(Vector2.Lerp(a, b, i / (float)dots)), 0.12f);
-                dot.color = new Color(0.3f, 0.55f, 1f, 0.8f);
-                dot.enabled = true;
-            }
+            DrawPatrolLeg(g.PatrolStart, g.PatrolEnd);
+            if (g.StorageStop.HasValue) DrawPatrolLeg(g.PatrolEnd, g.StorageStop.Value);
+        }
+    }
+
+    void DrawPatrolLeg(Vector2 a, Vector2 b)
+    {
+        int dots = Mathf.CeilToInt(Vector2.Distance(a, b) / 0.3f);
+        for (int i = 0; i < dots; i++)
+        {
+            SpriteRenderer dot = NewMarker("Patrol dot", map.DocToWorld(Vector2.Lerp(a, b, i / (float)dots)), 0.12f);
+            dot.color = new Color(0.3f, 0.55f, 1f, 0.8f);
+            dot.enabled = true;
         }
     }
 

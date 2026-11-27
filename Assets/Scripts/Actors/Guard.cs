@@ -24,20 +24,22 @@ public class Guard : MonoBehaviour
 
     MapBuilder map;
     Vector2Int pointA, pointB;
-    float period;
+    GuardRoute route;
 
     public Vector2Int PatrolStart => pointA;
     public Vector2Int PatrolEnd => pointB;
+    public Vector2Int? StorageStop => route.visitStorage ? route.storageCell : null;
 
     [Tooltip("Colour of the guard's field of view.")]
     [SerializeField] Color viewColor = new Color(0.2f, 0.45f, 1f, 0.3f);
 
-    public void Init(MapBuilder map, Vector2Int start, Vector2Int patrolEnd, float period)
+    public void Init(MapBuilder map, Vector2Int start, GuardRoute route)
     {
         this.map = map;
         pointA = start;
-        pointB = patrolEnd;
-        this.period = Mathf.Max(0.1f, period);
+        pointB = route.patrolEnd;
+        this.route = route;
+        Facing = route.stationaryFacing.normalized;
         ShowAt(0f);
 
         // Blue field of view that follows the guard, turns with him and stops at walls.
@@ -55,14 +57,24 @@ public class Guard : MonoBehaviour
     {
         if (map == null) return;
 
-        float half = period / 2f;
+        float period = Mathf.Max(0.1f, route.period);
         float phase = Mathf.Repeat(t, period);
-        bool outward = phase < half;
-        float k = outward ? phase / half : (phase - half) / half;
+        float dwell = route.visitStorage ? Mathf.Clamp(route.storageDwell, 0f, period - 0.1f) : 0f;
+        float mainDistance = Vector2.Distance(pointA, pointB);
+        float sideDistance = route.visitStorage ? Vector2.Distance(pointB, route.storageCell) : 0f;
+        float half = (period - dwell) / 2f;
+        float mainTime = half * mainDistance / Mathf.Max(0.01f, mainDistance + sideDistance);
 
-        DocPos = outward ? Vector2.Lerp(pointA, pointB, k) : Vector2.Lerp(pointB, pointA, k);
-        Vector2 dir = outward ? (Vector2)(pointB - pointA) : (Vector2)(pointA - pointB);
-        if (dir != Vector2.zero) Facing = dir.normalized;
+        if (phase < mainTime)
+            FollowLeg(pointA, pointB, phase, mainTime);
+        else if (phase < half && route.visitStorage)
+            FollowLeg(pointB, route.storageCell, phase - mainTime, half - mainTime);
+        else if (phase < half + dwell)
+            FollowLeg(pointB, route.storageCell, 1f, 1f);
+        else if (phase < period - mainTime && route.visitStorage)
+            FollowLeg(route.storageCell, pointB, phase - half - dwell, half - mainTime);
+        else
+            FollowLeg(pointB, pointA, phase - period + mainTime, mainTime);
 
         transform.position = map.DocToWorld(DocPos);
         if (facingVisual != null)
@@ -70,6 +82,13 @@ public class Guard : MonoBehaviour
             var worldFacing = new Vector3(Facing.x, -Facing.y, 0f); // document y points down
             facingVisual.up = imageFacesDown ? -worldFacing : worldFacing;
         }
+    }
+
+    void FollowLeg(Vector2 from, Vector2 to, float elapsed, float duration)
+    {
+        DocPos = Vector2.Lerp(from, to, duration > 0f ? elapsed / duration : 0f);
+        Vector2 direction = to - from;
+        Facing = direction == Vector2.zero ? route.stationaryFacing.normalized : direction.normalized;
     }
 
     public bool CanSee(Vector2 target)

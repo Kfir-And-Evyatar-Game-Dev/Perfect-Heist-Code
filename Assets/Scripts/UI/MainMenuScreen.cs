@@ -1,33 +1,15 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Home screen: the game title and a card for every heist. Only the tutorial is
-/// open; the others are locked ("Coming soon"). Created automatically in the
+/// Home screen: the game title and a card for every heist. Created automatically in the
 /// MainMenu scene by ScreenBootstrap.
 /// </summary>
 public class MainMenuScreen : MonoBehaviour
 {
-    RectTransform tutorialCard;
     Text eventBanner;
 
-    void Start()
-    {
-        GameManager gm = GameManager.Ensure();
-        Build(gm);
-
-        if (!gm.TutorialCompleted)
-        {
-            GuideRunner.Run(new List<GuideStep>
-            {
-                GuideStep.Explain("Welcome to PERFECT HEIST! Here you plan heists step by step,\n" +
-                                  "then press play and watch your crew follow the plan.", "Let's go"),
-                GuideStep.Tap("Start with the Tutorial. Tap it to begin.",
-                              () => UIKit.ScreenRect(tutorialCard), () => false),
-            });
-        }
-    }
+    void Start() => Build(GameManager.Ensure());
 
     void Build(GameManager gm)
     {
@@ -56,8 +38,7 @@ public class MainMenuScreen : MonoBehaviour
         Sprite diamond = Resources.Load<Sprite>("Portraits/Diamond");
         foreach (LevelInfo level in LevelInfo.All)
         {
-            RectTransform card = BuildCard(row, level, diamond, gm);
-            if (level.isTutorial) tutorialCard = card;
+            BuildCard(row, level, diamond, gm);
         }
 
         Text credit = UIKit.NewText(canvas, "Kfir Nizri & Evyatar Aharon", 28, TextAnchor.MiddleCenter, UIKit.Muted);
@@ -79,32 +60,30 @@ public class MainMenuScreen : MonoBehaviour
 
     void OnDestroy() => LiveConfigLoader.Loaded -= ShowLiveEvent;
 
-    RectTransform BuildCard(Transform parent, LevelInfo level, Sprite icon, GameManager gm)
+    void BuildCard(Transform parent, LevelInfo level, Sprite icon, GameManager gm)
     {
-        Image card = UIKit.NewImage(level.title, parent, level.locked ? new Color(0.11f, 0.12f, 0.16f) : UIKit.Card);
+        Image card = UIKit.NewImage(level.title, parent, UIKit.Card);
         RectTransform rt = card.rectTransform;
 
-        Image art = UIKit.NewSprite("Icon", rt, icon, level.locked ? new Color(0.08f, 0.08f, 0.1f) : Color.white);
+        Image art = UIKit.NewSprite("Icon", rt, icon, Color.white);
         UIKit.Place(art.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0, -40), new Vector2(200, 180));
 
-        Text name = UIKit.NewText(rt, level.title, 44, TextAnchor.MiddleCenter, level.locked ? UIKit.Muted : Color.white, FontStyle.Bold);
+        Text name = UIKit.NewText(rt, level.title, 44, TextAnchor.MiddleCenter, Color.white, FontStyle.Bold);
         UIKit.Place(name.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0, -240), new Vector2(380, 60));
 
         Text sub = UIKit.NewText(rt, level.subtitle, 28, TextAnchor.UpperCenter, UIKit.Muted);
         UIKit.Place(sub.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0, -305), new Vector2(340, 80));
 
-        string badge = level.locked ? "LOCKED" : (level.isTutorial && gm.TutorialCompleted ? "COMPLETED" : "START HERE");
-        Color badgeColor = level.locked ? new Color(0.3f, 0.3f, 0.35f) : (badge == "COMPLETED" ? UIKit.Green : new Color(0.85f, 0.45f, 0.1f));
-        Image badgeBg = UIKit.NewImage("Badge", rt, badgeColor);
-        badgeBg.raycastTarget = false;
-        UIKit.Place(badgeBg.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0, 26), new Vector2(260, 56));
-        UIKit.NewText(badgeBg.rectTransform, badge, 28, TextAnchor.MiddleCenter, Color.white, FontStyle.Bold);
-
-        if (!level.locked)
+        if (level.isTutorial)
         {
-            var button = card.gameObject.AddComponent<Button>();
-            button.onClick.AddListener(() => gm.ChooseLevel(level));
+            string badge = gm.TutorialCompleted ? "COMPLETED" : "START HERE";
+            Image badgeBg = UIKit.NewImage("Tutorial badge", rt, gm.TutorialCompleted ? UIKit.Green : UIKit.ButtonColor);
+            badgeBg.raycastTarget = false;
+            UIKit.Place(badgeBg.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0, 26), new Vector2(260, 56));
+            UIKit.NewText(badgeBg.rectTransform, badge, 28, TextAnchor.MiddleCenter, Color.white, FontStyle.Bold);
         }
-        return rt;
+
+        var button = card.gameObject.AddComponent<Button>();
+        button.onClick.AddListener(() => gm.ChooseLevel(level));
     }
 }

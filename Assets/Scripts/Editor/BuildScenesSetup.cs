@@ -15,6 +15,9 @@ static class BuildScenesSetup
         "Assets/Scenes/TeamSelect.unity",
         "Assets/Scenes/Tutorial.unity",
         "Assets/Scenes/Win.unity",
+        "Assets/Scenes/JewelryStore.unity",
+        "Assets/Scenes/Museum.unity",
+        "Assets/Scenes/Bank.unity",
     };
 
     static BuildScenesSetup() => EditorApplication.delayCall += Apply;

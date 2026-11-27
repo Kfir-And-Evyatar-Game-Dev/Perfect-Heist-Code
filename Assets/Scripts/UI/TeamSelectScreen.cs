@@ -10,6 +10,14 @@ using UnityEngine.UI;
 /// </summary>
 public class TeamSelectScreen : MonoBehaviour
 {
+    [Header("Tutorial briefing")]
+    [SerializeField, TextArea(2, 5)]
+    string storyBrief = "Sophie Alvarez was framed for stealing Heysterport's diamond. " +
+                        "Her letter says the display diamond is a fake. The trail leads to Kushobayev Security.";
+    [SerializeField, TextArea(2, 5)]
+    string practiceBrief = "First, rehearse in the garage. Tap the Hacker to start your crew. " +
+                        "Take your time planning, then press RUN to watch both timelines play together.";
+
     GameManager gm;
     LevelInfo level;
     readonly List<CharacterRole> crew = new List<CharacterRole>();
@@ -41,7 +49,7 @@ public class TeamSelectScreen : MonoBehaviour
     {
         shown = info;
         Sprite portrait = CharacterCatalog.Portrait(info);
-        bool available = level.Allows(info.role) && info.hasArt;
+        bool available = level.Allows(info.role);
         popupPortrait.sprite = portrait;
         popupPortrait.color = available ? Color.white : new Color(0.08f, 0.08f, 0.1f);
         popupName.text = info.name;
@@ -68,7 +76,7 @@ public class TeamSelectScreen : MonoBehaviour
 
         if (shown != null)
         {
-            bool available = level.Allows(shown.role) && shown.hasArt;
+            bool available = level.Allows(shown.role);
             bool inCrew = crew.Contains(shown.role);
             addButton.interactable = available && (inCrew || crew.Count < level.teamSize);
             UIKit.SetLabel(addButton, inCrew ? "Remove from crew" : "Add to crew");
@@ -84,12 +92,11 @@ public class TeamSelectScreen : MonoBehaviour
         RectTransform addRect = (RectTransform)addButton.transform;
         GuideRunner.Run(new List<GuideStep>
         {
-            GuideStep.Explain("Every heist needs a crew. Each crew member has a special skill.\n" +
-                              "For this heist you need 2 crew members."),
-            GuideStep.Tap("Tap the Hacker to see what the Hacker can do.",
+            GuideStep.Explain(storyBrief, "Rehearse"),
+            GuideStep.Tap(practiceBrief,
                           () => UIKit.ScreenRect(cards[CharacterRole.Hacker]),
                           () => popup.activeSelf && shown.role == CharacterRole.Hacker),
-            GuideStep.Explain("The Hacker can switch off a security camera for 8 seconds.\n" +
+            GuideStep.Explain("The Hacker can temporarily switch off a security camera.\n" +
                               "That will help us sneak past it!"),
             GuideStep.Tap("Tap 'Add to crew'.",
                           () => UIKit.ScreenRect(addRect),
@@ -97,7 +104,7 @@ public class TeamSelectScreen : MonoBehaviour
             GuideStep.Tap("Great! Now tap the Sneak.",
                           () => UIKit.ScreenRect(cards[CharacterRole.Sneak]),
                           () => popup.activeSelf && shown.role == CharacterRole.Sneak),
-            GuideStep.Explain("The Sneak moves silently. The Sneak will grab the diamond."),
+            GuideStep.Explain("The Sneak will collect the practice diamond while the camera is off."),
             GuideStep.Tap("Tap 'Add to crew'.",
                           () => UIKit.ScreenRect(addRect),
                           () => crew.Contains(CharacterRole.Sneak)),
@@ -147,7 +154,7 @@ public class TeamSelectScreen : MonoBehaviour
 
     void BuildCard(Transform parent, CharacterInfo info)
     {
-        bool available = level.Allows(info.role) && info.hasArt;
+        bool available = level.Allows(info.role);
         Image card = UIKit.NewImage(info.name, parent, available ? UIKit.Card : new Color(0.11f, 0.12f, 0.16f));
         RectTransform rt = card.rectTransform;
         cards[info.role] = rt;

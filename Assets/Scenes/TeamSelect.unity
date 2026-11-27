@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 211138599}
   - component: {fileID: 211138598}
   - component: {fileID: 211138597}
+  - component: {fileID: 211138600}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -211,6 +212,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &211138600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 211138596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5161cf35e59f36e43bb3de38939a82df, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  storyBrief: "Sophie Alvarez was framed for stealing Heysterport's diamond. Her letter says the display diamond is a fake. The trail leads to Kushobayev Security."
+  practiceBrief: "First, rehearse in the garage. Tap the Hacker to start your crew. Take your time planning, then press RUN to watch both timelines play together."
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

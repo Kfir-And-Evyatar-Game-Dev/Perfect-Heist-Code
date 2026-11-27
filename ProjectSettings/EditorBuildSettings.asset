@@ -17,6 +17,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Win.unity
     guid: 30e5640c17246474ba59970c8f5cb955
+  - enabled: 1
+    path: Assets/Scenes/JewelryStore.unity
+    guid: 76acbd192d36497db24ace299aae28d1
+  - enabled: 1
+    path: Assets/Scenes/Museum.unity
+    guid: 380b470b9fad4e68ac405a5b713e36e0
+  - enabled: 1
+    path: Assets/Scenes/Bank.unity
+    guid: 69dfc9d8c0ce4b519bd169d7e4d2398a
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

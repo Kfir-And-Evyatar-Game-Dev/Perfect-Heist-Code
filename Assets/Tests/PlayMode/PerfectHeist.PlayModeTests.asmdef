@@ -1,0 +1,6 @@
+{
+    "name": "PerfectHeist.PlayModeTests",
+    "references": ["UnityEngine.UI"],
+    "optionalUnityReferences": ["TestAssemblies"]
+}
+
